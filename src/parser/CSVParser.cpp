@@ -2,7 +2,6 @@
 // Created by edu on 18/03/26.
 //
 
-#include <iostream>
 #include <fstream>
 #include <sstream>
 #include <stdexcept>
@@ -44,7 +43,7 @@ std::vector<std::string> split(const std::string& line, char delimiter) {
 ConferenceData CSVParser::parse(const std::string& filename) {
     std::ifstream file(filename);
     if (!file.is_open()) {
-        throw std::runtime_error("Failed open file " + filename);
+        throw std::runtime_error("Failed to open file " + filename);
     }
     ConferenceData data;
     std::string line;
@@ -95,13 +94,14 @@ ConferenceData CSVParser::parse(const std::string& filename) {
             submission.secondary = fields[5].empty() ? -1 : std::stoi(fields[5]);
 
             data.submissions.push_back(submission);
+            continue;
         }
 
         if (currentSection == Section::Reviewers) {
             std::vector<std::string> fields = split(line, ',');
 
             if (fields.size() != 5) {
-                throw std::runtime_error("Invalid submission line: " + line);
+                throw std::runtime_error("Invalid reviewer line: " + line);
             }
 
             Reviewer reviewer;
@@ -112,6 +112,74 @@ ConferenceData CSVParser::parse(const std::string& filename) {
             reviewer.secondary = fields[4].empty() ? -1 : std::stoi(fields[4]);
 
             data.reviewers.push_back(reviewer);
+            continue;
+        }
+
+        if (currentSection == Section::Parameters) {
+            std::vector<std::string> fields = split(line, ',');
+
+            if (fields.size() != 2) {
+                throw std::runtime_error("Invalid parameter line: " + line);
+            }
+
+            std::string parameterName = fields[0];
+            int value = std::stoi(fields[1]);
+
+            if (parameterName == "MinReviewsPerSubmission") {
+                data.parameters.minReviewsPerSubmission = value;
+            }
+
+            else if (parameterName == "MaxReviewsPerReviewer") {
+                data.parameters.maxReviewsPerReviewer = value;
+            }
+
+            else if (parameterName == "PrimaryReviewerExpertise") {
+                data.parameters.primaryReviewerExpertise = value;
+            }
+
+            else if (parameterName == "SecondaryReviewerExpertise") {
+                data.parameters.secondaryReviewerExpertise = value;
+            }
+
+            else if (parameterName == "PrimarySubmissionDomain") {
+                data.parameters.primarySubmissionDomain = value;
+            }
+
+            else if (parameterName == "SecondarySubmissionDomain") {
+                data.parameters.secondarySubmissionDomain = value;
+            }
+            else {
+                throw std::runtime_error("Unknown parameter: " + parameterName);
+            }
+            continue;
+        }
+
+        if (currentSection == Section::Control) {
+            std::vector<std::string> fields = split(line, ',');
+
+            if (fields.size() != 2) {
+                throw std::runtime_error("Invalid control line: " + line);
+            }
+
+            std::string parameterName = fields[0];
+
+            if (parameterName == "GenerateAssignments") {
+                int value = std::stoi(fields[1]);
+                data.control.generateAssignments = value;
+            }
+
+            else if (parameterName == "RiskAnalysis") {
+                int value = std::stoi(fields[1]);
+                data.control.riskAnalysis = value;
+            }
+
+            else if (parameterName == "OutputFileName") {
+                data.control.outputFilename = fields[1];
+            }
+            else {
+                throw std::runtime_error("Unknown control parameter: " + parameterName);
+            }
+            continue;
         }
     }
     return data;
