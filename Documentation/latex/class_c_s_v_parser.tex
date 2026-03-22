@@ -1,0 +1,45 @@
+\doxysection{CSVParser Class Reference}
+\hypertarget{class_c_s_v_parser}{}\label{class_c_s_v_parser}\index{CSVParser@{CSVParser}}
+
+
+{\ttfamily \+\#include $<$CSVParser.\+h$>$}
+
+\doxysubsubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+static \doxymbox{\hyperlink{struct_conference_data}{Conference\+Data}} \doxymbox{\hyperlink{class_c_s_v_parser_aa827a5054b2dedc350cb40f107a433e3}{parse}} (const std::\+string \&filename)
+\begin{DoxyCompactList}\small\item\em Reads and parses a CSV input file into a \doxylink{struct_conference_data}{Conference\+Data} object. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\label{doc-func-members}
+\Hypertarget{class_c_s_v_parser_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_c_s_v_parser_aa827a5054b2dedc350cb40f107a433e3}\index{CSVParser@{CSVParser}!parse@{parse}}
+\index{parse@{parse}!CSVParser@{CSVParser}}
+\doxysubsubsection{\texorpdfstring{parse()}{parse()}}
+{\footnotesize\ttfamily \label{class_c_s_v_parser_aa827a5054b2dedc350cb40f107a433e3} 
+\doxymbox{\hyperlink{struct_conference_data}{Conference\+Data}} CSVParser::\+parse (\begin{DoxyParamCaption}\item[{const std::\+string \&}]{filename}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Reads and parses a CSV input file into a \doxylink{struct_conference_data}{Conference\+Data} object. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em filename} & Path to the input .csv file. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+\doxylink{struct_conference_data}{Conference\+Data} object containing submissions, reviewers, parameters and control settings. 
+\end{DoxyReturn}
+
+\begin{DoxyExceptions}{Exceptions}
+{\em std::\+runtime\+\_\+error} & if the file cannot be opened, has invalid format, or contains duplicate IDs. @complexity O(N + M) where N = number of submissions, M = number of reviewers. \\
+\hline
+\end{DoxyExceptions}
+
+
+The documentation for this class was generated from the following files:\+\begin{DoxyCompactItemize}
+\item 
+src/\+parser/\+\doxymbox{\hyperlink{_c_s_v_parser_8h}{CSVParser.\+h}}\item 
+src/\+parser/\+\doxymbox{\hyperlink{_c_s_v_parser_8cpp}{CSVParser.\+cpp}}\end{DoxyCompactItemize}

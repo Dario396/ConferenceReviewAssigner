@@ -12,10 +12,10 @@
 #include "Control.h"
 
 struct ConferenceData{
-    std::vector<Submission> submissions;
-    std::vector<Reviewer> reviewers;
-    Parameters parameters;
-    Control control;
+    std::vector<Submission> submissions; ///< Stores all the submissions
+    std::vector<Reviewer> reviewers; ///< Stores all the reviewers
+    Parameters parameters; ///< Stores the parameters
+    Control control; ///< Stores the control information
 };
 
 #endif //DA_PROJETO1_CONFERENCEDATA_H

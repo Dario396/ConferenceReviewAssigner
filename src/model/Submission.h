@@ -8,12 +8,12 @@
 #include <string>
 
 struct Submission {
-    int id;
-    std::string title;
-    std::string authors;
-    std::string email;
-    int primary;
-    int secondary;
+    int id; ///< Unique submission identifier
+    std::string title; ///< Title of the paper
+    std::string authors; ///< Author(s) of the paper
+    std::string email; ///< Contact email
+    int primary; ///< Primary topic identifier
+    int secondary; ///< Secondary topic identifier (-1 if not defined)
 };
 
 #endif //DA_SUBMISSION_H
