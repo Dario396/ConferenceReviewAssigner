@@ -44,7 +44,23 @@ void Menu::showOptions(){
 }
 
 void Menu::loadFile(){
-  return;
+  string filename;
+  cout << "File: ";
+  cin >> filename;
+
+  string filepath = filename;
+  if(filename.find('/') == string::npos) {
+    filepath = "inputs/" + filename;
+  }
+
+  try {
+    data = parser.parse(filepath);
+    dataLoaded = true;
+    cout << "Loaded " << data.submissions.size() << " submissions and "
+    << data.reviewers.size() << " reviewers.\n";
+  } catch(const exception& e) {
+    cerr << "Error: " << e.what() << "\n";
+  }
 }
 
 void Menu::listSubmissions(){
