@@ -4,11 +4,18 @@
 
 #ifndef MENU_H
 #define MENU_H
+#include "../model/ConferenceData.h"
+#include "../parser/CSVParser.h"
+#include <string>
 class Menu {
   public:
     void run();
 
   private:
+    ConferenceData data;
+    CSVParser parser;
+    bool dataLoaded = false;
+
     void showOptions();
     void loadFile();
     void listSubmissions();

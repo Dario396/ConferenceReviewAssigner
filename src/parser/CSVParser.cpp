@@ -5,6 +5,7 @@
 #include <fstream>
 #include <sstream>
 #include <stdexcept>
+#include <unordered_set>
 #include "CSVParser.h"
 
 
@@ -25,18 +26,22 @@ std::string trim(const std::string& str) {
     return str.substr(start, end - start + 1);
 }
 
-std::vector<std::string> split(const std::string& line, char delimiter) {
+std::vector<std::string> splitRespectingQuotes(const std::string& line) {
     std::vector<std::string> fields;
-    std::stringstream ss(line);
     std::string field;
+    bool insideQuotes = false;
 
-    while (std::getline(ss, field, delimiter)) {
-        fields.push_back(trim(field));
+    for (char c : line) {
+        if (c == '"') {
+            insideQuotes = !insideQuotes;  // entra/sai das aspas
+        } else if (c == ',' && !insideQuotes) {
+            fields.push_back(trim(field)); // fim de campo
+            field.clear();
+        } else {
+            field += c;  // acumula o caracter
+        }
     }
-
-    if (!line.empty() && line.back() == delimiter) {
-        fields.push_back("");
-    }
+    fields.push_back(trim(field)); // último campo
     return fields;
 }
 
@@ -79,9 +84,9 @@ ConferenceData CSVParser::parse(const std::string& filename) {
         if (line.empty()) continue;
 
         if (currentSection == Section::Submissions) {
-            std::vector<std::string> fields = split(line, ',');
+            std::vector<std::string> fields = splitRespectingQuotes(line);
 
-            if (fields.size() != 6) {
+            if (fields.size() < 5 || fields.size() > 6) {
                 throw std::runtime_error("Invalid submission line: " + line);
             }
 
@@ -98,7 +103,7 @@ ConferenceData CSVParser::parse(const std::string& filename) {
         }
 
         if (currentSection == Section::Reviewers) {
-            std::vector<std::string> fields = split(line, ',');
+            std::vector<std::string> fields = splitRespectingQuotes(line);
 
             if (fields.size() != 5) {
                 throw std::runtime_error("Invalid reviewer line: " + line);
@@ -116,7 +121,7 @@ ConferenceData CSVParser::parse(const std::string& filename) {
         }
 
         if (currentSection == Section::Parameters) {
-            std::vector<std::string> fields = split(line, ',');
+            std::vector<std::string> fields = splitRespectingQuotes(line);
 
             if (fields.size() != 2) {
                 throw std::runtime_error("Invalid parameter line: " + line);
@@ -155,7 +160,7 @@ ConferenceData CSVParser::parse(const std::string& filename) {
         }
 
         if (currentSection == Section::Control) {
-            std::vector<std::string> fields = split(line, ',');
+            std::vector<std::string> fields = splitRespectingQuotes(line);
 
             if (fields.size() != 2) {
                 throw std::runtime_error("Invalid control line: " + line);
@@ -182,5 +187,20 @@ ConferenceData CSVParser::parse(const std::string& filename) {
             continue;
         }
     }
+
+    std::unordered_set<int> submissionIds;
+    for (const auto& s : data.submissions) {
+        if (!submissionIds.insert(s.id).second) {
+            throw std::runtime_error("Duplicate submission ID: " + std::to_string(s.id));
+        }
+    }
+
+    std::unordered_set<int> reviewerIds;
+    for (const auto& r : data.reviewers) {
+        if (!reviewerIds.insert(r.id).second) {
+            throw std::runtime_error("Duplicate reviewer ID: " + std::to_string(r.id));
+        }
+    }
+
     return data;
 }

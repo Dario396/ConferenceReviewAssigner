@@ -44,17 +44,73 @@ void Menu::showOptions(){
 }
 
 void Menu::loadFile(){
-  return;
+  string filename;
+  cout << "File: ";
+  cin >> filename;
+
+  string filepath = filename;
+  if(filename.find('/') == string::npos) {
+    filepath = "inputs/" + filename;
+  }
+
+  try {
+    data = parser.parse(filepath);
+    dataLoaded = true;
+    cout << "Loaded " << data.submissions.size() << " submissions and "
+    << data.reviewers.size() << " reviewers.\n";
+  } catch(const exception& e) {
+    cerr << "Error: " << e.what() << "\n";
+  }
 }
 
 void Menu::listSubmissions(){
-    return;
+    if(!dataLoaded){
+      cout << "No file loaded. Use option 1 first.\n";
+      return;
+    }
+
+    for(auto s : data.submissions) {
+        cout << "ID: " << s.id << "\n";
+        cout << "  Title:   " << s.title << "\n";
+        cout << "  Authors: " << s.authors << "\n";
+        cout << "  Email:   " << s.email << "\n";
+        cout << "  Topic:   " << s.primary;
+
+        if (s.secondary != -1) cout << " (secondary: " << s.secondary << ")";
+        cout << "\n\n";
+    }
 }
 void Menu::listReviewers(){
-    return;
+    if(!dataLoaded) {
+        cout << "No file loaded. Use option 1 first.\n";
+        return;
+    }
+
+    for(auto r : data.reviewers) {
+        cout << "ID: " << r.id << "\n";
+        cout << "  Name:   " << r.name << "\n";
+        cout << "  Email:   " << r.email << "\n";
+        cout << "  Topic:   " << r.primary << "\n";
+
+        if (r.secondary != -1) cout << " (secondary: " << r.secondary << ")";
+        cout << "\n\n";
+    }
 }
 void Menu::showParameters(){
-    return;
+    if(!dataLoaded) {
+        cout << "No file loaded. Use option 1 first.\n";
+        return;
+    }
+
+    cout << "\n=== Parameters ===\n";
+    cout << "Min reviews per submission:  " << data.parameters.minReviewsPerSubmission << "\n";
+    cout << "Max reviews per reviewer:    " << data.parameters.maxReviewsPerReviewer << "\n";
+    cout << "\n";
+    cout << "Primary reviewer expertise:  " << data.parameters.primaryReviewerExpertise << "\n";
+    cout << "Secondary reviewer expertise:" << data.parameters.secondaryReviewerExpertise << "\n";
+    cout << "\n";
+    cout << "Primary submission domain:   " << data.parameters.primarySubmissionDomain << "\n";
+    cout << "Secondary submission domain: " << data.parameters.secondarySubmissionDomain << "\n";
 }
 void Menu::generateAssignment(){
     return;
