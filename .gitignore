@@ -1,2 +1,18 @@
 .idea/
 cmake-build-*/
+build/
+main
+
+# Ficheiros do CMake que podem aparecer na raiz
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+Makefile
+
+# Editor/IDE
+.vscode/
+.idea/
+*.swp
+
+# OS
+.DS_Store
