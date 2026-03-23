@@ -19,6 +19,8 @@ Makefile
 
 # Generated documentation
 docs/
+html/
+latex/
 
 # Local binaries and project files
 main.exe
