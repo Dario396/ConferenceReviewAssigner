@@ -51,8 +51,8 @@ void Menu::loadFile(){
 
   string filepath = filename;
   if(filename.find('/') == string::npos && filename.find('\\') == string::npos) {
-    if (filesystem::exists("inputs/" + filename)) {
-      filepath = "inputs/" + filename;
+    if (!filesystem::exists("inputs/" + filename)) {
+      filepath = "../inputs/" + filename;
     }
   }
 
@@ -118,6 +118,7 @@ void Menu::showParameters(){
 void Menu::generateAssignment(){
     return;
 }
+
 void Menu::runRiskAnalysis(){
     return;
 }
