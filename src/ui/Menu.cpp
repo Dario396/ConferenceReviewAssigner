@@ -3,6 +3,7 @@
 //
 
 #include "Menu.h"
+#include <filesystem>
 #include <iostream>
 using namespace std;
 
@@ -49,8 +50,10 @@ void Menu::loadFile(){
   cin >> filename;
 
   string filepath = filename;
-  if(filename.find('/') == string::npos) {
-    filepath = "inputs/" + filename;
+  if(filename.find('/') == string::npos && filename.find('\\') == string::npos) {
+    if (filesystem::exists("inputs/" + filename)) {
+      filepath = "inputs/" + filename;
+    }
   }
 
   try {
