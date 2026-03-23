@@ -45,25 +45,27 @@ void Menu::showOptions(){
 }
 
 void Menu::loadFile(){
-  string filename;
-  cout << "File: ";
-  cin >> filename;
+    string filename;
+    cout << "File: ";
+    cin >> filename;
 
-  string filepath = filename;
-  if(filename.find('/') == string::npos && filename.find('\\') == string::npos) {
-    if (!filesystem::exists("inputs/" + filename)) {
-      filepath = "../inputs/" + filename;
+    string filepath = filename;
+    if (filename.find('/') == string::npos && filename.find('\\') == string::npos) {
+        if (filesystem::exists("inputs/" + filename)) {
+            filepath = "inputs/" + filename;
+        } else if (filesystem::exists("../inputs/" + filename)) {
+            filepath = "../inputs/" + filename;
+        }
     }
-  }
 
-  try {
-    data = parser.parse(filepath);
-    dataLoaded = true;
-    cout << "Loaded " << data.submissions.size() << " submissions and "
-    << data.reviewers.size() << " reviewers.\n";
-  } catch(const exception& e) {
-    cerr << "Error: " << e.what() << "\n";
-  }
+    try {
+        data = parser.parse(filepath);
+        dataLoaded = true;
+        cout << "Loaded " << data.submissions.size() << " submissions and "
+             << data.reviewers.size() << " reviewers.\n";
+    } catch(const exception& e) {
+        cerr << "Error: " << e.what() << "\n";
+    }
 }
 
 void Menu::listSubmissions(){
