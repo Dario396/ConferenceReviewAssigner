@@ -16,3 +16,10 @@ Makefile
 
 # OS
 .DS_Store
+
+# Generated documentation
+docs/
+
+# Local binaries and project files
+main.exe
+Project1Description_rc2.pdf
