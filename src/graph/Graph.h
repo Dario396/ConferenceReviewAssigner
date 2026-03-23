@@ -21,7 +21,7 @@ template <class T>
 class Vertex {
 public:
     Vertex(T in);
-    bool operator<(Vertex<T> & vertex) const; // // required by MutablePriorityQueue
+    bool operator<(Vertex<T> & vertex) const;
 
     T getInfo() const;
     std::vector<Edge<T> *> getAdj() const;
@@ -48,7 +48,6 @@ public:
     bool removeEdge(T in);
     void removeOutgoingEdges();
 
-    friend class MutablePriorityQueue<Vertex>;
 protected:
     T info;                // info node
     std::vector<Edge<T> *> adj;  // outgoing edges
@@ -62,8 +61,6 @@ protected:
     Edge<T> *path = nullptr;
 
     std::vector<Edge<T> *> incoming; // incoming edges
-
-    int queueIndex = 0; 		// required by MutablePriorityQueue and UFDS
 
     void deleteEdge(Edge<T> *edge);
 };

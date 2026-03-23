@@ -6,6 +6,7 @@ add_executable(DA_projeto1
     src/main.cpp
     src/parser/CSVParser.cpp
     src/ui/Menu.cpp
+    src/algorithm/FlowNetwork.cpp
 )
 
 target_compile_features(DA_projeto1 PRIVATE cxx_std_17)
