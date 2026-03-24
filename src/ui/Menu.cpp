@@ -51,7 +51,9 @@ void Menu::loadFile(){
 
   string filepath = filename;
   if(filename.find('/') == string::npos && filename.find('\\') == string::npos) {
-    if (!filesystem::exists("inputs/" + filename)) {
+    if (filesystem::exists("inputs/" + filename)) {
+      filepath = "inputs/" + filename;
+    } else {
       filepath = "../inputs/" + filename;
     }
   }
