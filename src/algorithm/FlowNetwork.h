@@ -6,6 +6,8 @@
 #define FLOWNETWORK_H
 #include "../graph/Graph.h"
 #include "../model/ConferenceData.h"
+#include <tuple>
+#include <utility>
 #include <vector>
 
 class FlowNetwork {
@@ -23,13 +25,32 @@ public:
      */
     double solve();
 
+    /**
+     * @brief Returns the reviewer assignments encoded by the current flow.
+     * @return Pairs of submission id and reviewer id.
+     * @complexity O(N * M)
+     */
+    std::vector<std::pair<int, int>> getAssignments() const;
+
+    /**
+     * @brief Returns each submission still missing reviews.
+     * @return Tuples of submission id, primary domain and missing review count.
+     * @complexity O(N)
+     */
+    std::vector<std::tuple<int, int, int>> getMissingReviews() const;
+
 private:
     Graph<int> graph;
     int source;
     int sink;
     int numSubmissions;
     int numReviewers;
+    std::vector<int> submissionIds;
+    std::vector<int> submissionDomains;
+    std::vector<int> reviewerIds;
 
-    bool bfs();  // encontra caminho aumentante
+    void clear();
+    void addResidualEdge(int from, int to, int capacity);
+    bool bfs();
 };
 #endif //FLOWNETWORK_H
