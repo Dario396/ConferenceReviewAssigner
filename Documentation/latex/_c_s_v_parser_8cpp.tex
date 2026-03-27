@@ -1,0 +1,110 @@
+\doxysection{src/\+parser/\+\+CSVParser.cpp File Reference}
+\hypertarget{_c_s_v_parser_8cpp}{}\label{_c_s_v_parser_8cpp}\index{src/parser/CSVParser.cpp@{src/parser/CSVParser.cpp}}
+{\ttfamily \+\#include $<$fstream$>$}\newline
+{\ttfamily \+\#include $<$sstream$>$}\newline
+{\ttfamily \+\#include $<$stdexcept$>$}\newline
+{\ttfamily \+\#include $<$unordered\+\_\+set$>$}\newline
+{\ttfamily \+\#include "{}CSVParser.\+h"{}}\newline
+\doxysubsubsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+enum class \doxymbox{\hyperlink{_c_s_v_parser_8cpp_aa2bc2fd5a40cdb0c40963e6fe6a24cce}{Section}} \{ \newline
+\doxymbox{\hyperlink{_c_s_v_parser_8cpp_aa2bc2fd5a40cdb0c40963e6fe6a24ccea6adf97f83acf6453d4a6a4b1070f3754}{None}}
+, \doxymbox{\hyperlink{_c_s_v_parser_8cpp_aa2bc2fd5a40cdb0c40963e6fe6a24ccea10d81b02e29b549de30767810ae073a0}{Submissions}}
+, \doxymbox{\hyperlink{_c_s_v_parser_8cpp_aa2bc2fd5a40cdb0c40963e6fe6a24ccea6890b9758d9d149fc6040f5c4350fa14}{Reviewers}}
+, \doxymbox{\hyperlink{_c_s_v_parser_8cpp_aa2bc2fd5a40cdb0c40963e6fe6a24ccea3225a10b07f1580f10dee4abc3779e6c}{Parameters}}
+, \newline
+\doxymbox{\hyperlink{_c_s_v_parser_8cpp_aa2bc2fd5a40cdb0c40963e6fe6a24cceaa1595abbb4c3a326636dd178757cd6c1}{Control}}
+ \}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+std::\+string \doxymbox{\hyperlink{_c_s_v_parser_8cpp_a5a01f705cc7b4a7317a57f6bf41aef25}{trim}} (const std::\+string \&str)
+\begin{DoxyCompactList}\small\item\em Removes leading and trailing whitespace from a string. \end{DoxyCompactList}\item 
+std::\+vector$<$ std::\+string $>$ \doxymbox{\hyperlink{_c_s_v_parser_8cpp_a2f1daa58d508978b8d0209dc7f078073}{split\+Respecting\+Quotes}} (const std::\+string \&line)
+\begin{DoxyCompactList}\small\item\em Splits a CSV line by commas, ignoring commas inside quoted strings. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\label{doc-enum-members}
+\Hypertarget{_c_s_v_parser_8cpp_doc-enum-members}
+\doxysubsection{Enumeration Type Documentation}
+\Hypertarget{_c_s_v_parser_8cpp_aa2bc2fd5a40cdb0c40963e6fe6a24cce}\index{CSVParser.cpp@{CSVParser.cpp}!Section@{Section}}
+\index{Section@{Section}!CSVParser.cpp@{CSVParser.cpp}}
+\doxysubsubsection{\texorpdfstring{Section}{Section}}
+{\footnotesize\ttfamily \label{_c_s_v_parser_8cpp_aa2bc2fd5a40cdb0c40963e6fe6a24cce} 
+enum class \doxymbox{\hyperlink{_c_s_v_parser_8cpp_aa2bc2fd5a40cdb0c40963e6fe6a24cce}{Section}}\hspace{0.3cm}{\ttfamily [strong]}}
+
+\begin{DoxyEnumFields}[2]{Enumerator}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{None@{None}!CSVParser.cpp@{CSVParser.cpp}}
+\index{CSVParser.cpp@{CSVParser.cpp}!None@{None}}
+}\Hypertarget{_c_s_v_parser_8cpp_aa2bc2fd5a40cdb0c40963e6fe6a24ccea6adf97f83acf6453d4a6a4b1070f3754}\label{_c_s_v_parser_8cpp_aa2bc2fd5a40cdb0c40963e6fe6a24ccea6adf97f83acf6453d4a6a4b1070f3754} 
+None&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Submissions@{Submissions}!CSVParser.cpp@{CSVParser.cpp}}
+\index{CSVParser.cpp@{CSVParser.cpp}!Submissions@{Submissions}}
+}\Hypertarget{_c_s_v_parser_8cpp_aa2bc2fd5a40cdb0c40963e6fe6a24ccea10d81b02e29b549de30767810ae073a0}\label{_c_s_v_parser_8cpp_aa2bc2fd5a40cdb0c40963e6fe6a24ccea10d81b02e29b549de30767810ae073a0} 
+Submissions&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Reviewers@{Reviewers}!CSVParser.cpp@{CSVParser.cpp}}
+\index{CSVParser.cpp@{CSVParser.cpp}!Reviewers@{Reviewers}}
+}\Hypertarget{_c_s_v_parser_8cpp_aa2bc2fd5a40cdb0c40963e6fe6a24ccea6890b9758d9d149fc6040f5c4350fa14}\label{_c_s_v_parser_8cpp_aa2bc2fd5a40cdb0c40963e6fe6a24ccea6890b9758d9d149fc6040f5c4350fa14} 
+Reviewers&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Parameters@{Parameters}!CSVParser.cpp@{CSVParser.cpp}}
+\index{CSVParser.cpp@{CSVParser.cpp}!Parameters@{Parameters}}
+}\Hypertarget{_c_s_v_parser_8cpp_aa2bc2fd5a40cdb0c40963e6fe6a24ccea3225a10b07f1580f10dee4abc3779e6c}\label{_c_s_v_parser_8cpp_aa2bc2fd5a40cdb0c40963e6fe6a24ccea3225a10b07f1580f10dee4abc3779e6c} 
+Parameters&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Control@{Control}!CSVParser.cpp@{CSVParser.cpp}}
+\index{CSVParser.cpp@{CSVParser.cpp}!Control@{Control}}
+}\Hypertarget{_c_s_v_parser_8cpp_aa2bc2fd5a40cdb0c40963e6fe6a24cceaa1595abbb4c3a326636dd178757cd6c1}\label{_c_s_v_parser_8cpp_aa2bc2fd5a40cdb0c40963e6fe6a24cceaa1595abbb4c3a326636dd178757cd6c1} 
+Control&\\
+\hline
+
+\end{DoxyEnumFields}
+
+
+\label{doc-func-members}
+\Hypertarget{_c_s_v_parser_8cpp_doc-func-members}
+\doxysubsection{Function Documentation}
+\Hypertarget{_c_s_v_parser_8cpp_a2f1daa58d508978b8d0209dc7f078073}\index{CSVParser.cpp@{CSVParser.cpp}!splitRespectingQuotes@{splitRespectingQuotes}}
+\index{splitRespectingQuotes@{splitRespectingQuotes}!CSVParser.cpp@{CSVParser.cpp}}
+\doxysubsubsection{\texorpdfstring{splitRespectingQuotes()}{splitRespectingQuotes()}}
+{\footnotesize\ttfamily \label{_c_s_v_parser_8cpp_a2f1daa58d508978b8d0209dc7f078073} 
+std::\+vector$<$ std::\+string $>$ split\+Respecting\+Quotes (\begin{DoxyParamCaption}\item[{const std::\+string \&}]{line}{}\end{DoxyParamCaption})}
+
+
+
+Splits a CSV line by commas, ignoring commas inside quoted strings. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em line} & The CSV line to split. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Vector of fields extracted from the line. @complexity O(\+N) where N = length of the line. 
+\end{DoxyReturn}
+\Hypertarget{_c_s_v_parser_8cpp_a5a01f705cc7b4a7317a57f6bf41aef25}\index{CSVParser.cpp@{CSVParser.cpp}!trim@{trim}}
+\index{trim@{trim}!CSVParser.cpp@{CSVParser.cpp}}
+\doxysubsubsection{\texorpdfstring{trim()}{trim()}}
+{\footnotesize\ttfamily \label{_c_s_v_parser_8cpp_a5a01f705cc7b4a7317a57f6bf41aef25} 
+std::\+string trim (\begin{DoxyParamCaption}\item[{const std::\+string \&}]{str}{}\end{DoxyParamCaption})}
+
+
+
+Removes leading and trailing whitespace from a string. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em str} & The string to trim. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The trimmed string. @complexity O(\+N) where N = length of the string. 
+\end{DoxyReturn}

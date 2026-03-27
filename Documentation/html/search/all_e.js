@@ -1,0 +1,24 @@
+var searchData=
+[
+  ['secondary_0',['secondary',['../struct_reviewer.html#ab81f15c667b7930352aae518af446e66',1,'Reviewer::secondary'],['../struct_submission.html#a9a0cecfd6d8ff31ce85a22c4a88737bd',1,'Submission::secondary']]],
+  ['secondaryreviewerexpertise_1',['secondaryReviewerExpertise',['../struct_parameters.html#a66edfe04b880cf7060f40eae3a1aa695',1,'Parameters']]],
+  ['secondarysubmissiondomain_2',['secondarySubmissionDomain',['../struct_parameters.html#ab0a361652545514ac10813459c929f1f',1,'Parameters']]],
+  ['section_3',['Section',['../_c_s_v_parser_8cpp.html#aa2bc2fd5a40cdb0c40963e6fe6a24cce',1,'CSVParser.cpp']]],
+  ['selected_4',['selected',['../class_edge.html#a5242549271b59544ad1189fb532b5bbe',1,'Edge']]],
+  ['setdist_5',['setDist',['../class_vertex.html#a060fbea0c3738cc3e09d84ad8c431b34',1,'Vertex']]],
+  ['setflow_6',['setFlow',['../class_edge.html#a1819116e2c156733a14bbd94cc27908e',1,'Edge']]],
+  ['setindegree_7',['setIndegree',['../class_vertex.html#af9c4caaac19bdaae5a88a7a671639b59',1,'Vertex']]],
+  ['setinfo_8',['setInfo',['../class_vertex.html#a31cd60c26640f8072a928ba70eb2f95e',1,'Vertex']]],
+  ['setlow_9',['setLow',['../class_vertex.html#a62acec2c4fcbec56e995974b91444ec9',1,'Vertex']]],
+  ['setnum_10',['setNum',['../class_vertex.html#ab3f9026ba6cbd11243ab484a856c6581',1,'Vertex']]],
+  ['setpath_11',['setPath',['../class_vertex.html#a5ebf4b550ec94b89a8f80df1a53cc97d',1,'Vertex']]],
+  ['setprocessing_12',['setProcessing',['../class_vertex.html#a5ccb6f7215c915afdbcbdb81ad70a408',1,'Vertex']]],
+  ['setreverse_13',['setReverse',['../class_edge.html#afe8f8429025756c63f38e8c6fde7382c',1,'Edge']]],
+  ['setselected_14',['setSelected',['../class_edge.html#a87c8402c5edd6729a2c934e2a0cce6fe',1,'Edge']]],
+  ['setvisited_15',['setVisited',['../class_vertex.html#a95a3f3c55f2ba371fae51d3fe0e76c23',1,'Vertex']]],
+  ['splitrespectingquotes_16',['splitRespectingQuotes',['../_c_s_v_parser_8cpp.html#a2f1daa58d508978b8d0209dc7f078073',1,'CSVParser.cpp']]],
+  ['submission_17',['Submission',['../struct_submission.html',1,'']]],
+  ['submission_2eh_18',['Submission.h',['../_submission_8h.html',1,'']]],
+  ['submissions_19',['Submissions',['../_c_s_v_parser_8cpp.html#aa2bc2fd5a40cdb0c40963e6fe6a24ccea10d81b02e29b549de30767810ae073a0',1,'CSVParser.cpp']]],
+  ['submissions_20',['submissions',['../struct_conference_data.html#a3b1866d922e278a7a49acdcc7a568ed8',1,'ConferenceData']]]
+];

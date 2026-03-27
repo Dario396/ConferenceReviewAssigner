@@ -17,6 +17,12 @@ enum class Section {
     Control
 };
 
+/**
+ * @brief Removes leading and trailing whitespace from a string.
+ * @param str The string to trim.
+ * @return The trimmed string.
+ * @complexity O(N) where N = length of the string.
+ */
 std::string trim(const std::string& str) {
     size_t start = str.find_first_not_of(" \t\r\n");
     if (start == std::string::npos) {
@@ -26,6 +32,12 @@ std::string trim(const std::string& str) {
     return str.substr(start, end - start + 1);
 }
 
+/**
+ * @brief Splits a CSV line by commas, ignoring commas inside quoted strings.
+ * @param line The CSV line to split.
+ * @return Vector of fields extracted from the line.
+ * @complexity O(N) where N = length of the line.
+ */
 std::vector<std::string> splitRespectingQuotes(const std::string& line) {
     std::vector<std::string> fields;
     std::string field;

@@ -6,14 +6,14 @@
 #define DA_PARAMETERS_H
 
 struct Parameters {
-    int minReviewsPerSubmission;
-    int maxReviewsPerReviewer;
+    int minReviewsPerSubmission; ///< Minimum reviews required per submission
+    int maxReviewsPerReviewer; ///< Maximum reviews required per submission
 
-    int primaryReviewerExpertise;
-    int secondaryReviewerExpertise;
+    int primaryReviewerExpertise; ///< Weight for primary reviewer expertise match
+    int secondaryReviewerExpertise; ///< Weight for secondary reviewer expertise match
 
-    int primarySubmissionDomain;
-    int secondarySubmissionDomain;
+    int primarySubmissionDomain; ///< Weight for primary submission domain match
+    int secondarySubmissionDomain; ///< Weight for secondary submission domain match
 };
 
 

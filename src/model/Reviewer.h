@@ -8,11 +8,11 @@
 #include <string>
 
 struct Reviewer {
-    int id;
-    std::string name;
-    std::string email;
-    int primary;
-    int secondary;
+    int id; ///< Unique reviewer identifier
+    std::string name; ///< Full name of the reviewer
+    std::string email; ///< Contact email
+    int primary; ///< Primary expertise topic
+    int secondary; ///< Secondary expertise topic (-1 if not defined)
 };
 
 #endif //DA_REVIEWER_H
