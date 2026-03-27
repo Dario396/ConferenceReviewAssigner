@@ -4,41 +4,12 @@
 
 #include "Menu.h"
 #include "../algorithm/FlowNetwork.h"
-#include <fstream>
+#include "../algorithm/RiskAnalysis.h"
+#include "../output/ReportWriter.h"
 #include <filesystem>
 #include <iostream>
 
 using namespace std;
-
-namespace {
-void writeAssignmentReport(const ConferenceData& data,
-                           const vector<pair<int, int>>& assignments,
-                           const vector<tuple<int, int, int>>& missingReviews) {
-    ofstream output(data.control.outputFilename);
-    if (!output.is_open()) {
-        throw runtime_error("Failed to open output file " + data.control.outputFilename);
-    }
-
-    if (!assignments.empty()) {
-        output << "#Assignments\n";
-        output << "SubmissionId,ReviewerId\n";
-        for (const auto& assignment : assignments) {
-            output << assignment.first << "," << assignment.second << "\n";
-        }
-    }
-
-    if (!missingReviews.empty()) {
-        if (!assignments.empty()) {
-            output << "\n";
-        }
-        output << "#Submission\n";
-        output << "Id,Domain,MissingReviews\n";
-        for (const auto& [submissionId, domain, missing] : missingReviews) {
-            output << submissionId << "," << domain << "," << missing << "\n";
-        }
-    }
-}
-}
 
 void Menu::run() {
     int option;
@@ -192,7 +163,15 @@ void Menu::generateAssignment(){
 
     if (data.control.generateAssignments != 0) {
         try {
-            writeAssignmentReport(data, assignments, missingReviews);
+            RiskAnalysisResult riskAnalysis;
+            RiskAnalysisResult* riskAnalysisPtr = nullptr;
+
+            if (data.control.riskAnalysis != 0) {
+                riskAnalysis = RiskAnalysis::analyzeSingleReviewerFailures(data);
+                riskAnalysisPtr = &riskAnalysis;
+            }
+
+            writeConferenceReport(data.control.outputFilename, assignments, missingReviews, riskAnalysisPtr);
             cout << "\nReport written to " << data.control.outputFilename << "\n";
         } catch (const exception& e) {
             cerr << "Error: " << e.what() << "\n";
@@ -201,5 +180,27 @@ void Menu::generateAssignment(){
 }
 
 void Menu::runRiskAnalysis(){
-    return;
+    if(!dataLoaded) {
+        cout << "No file loaded. Use option 1 first.\n";
+        return;
+    }
+
+    const auto result = RiskAnalysis::analyzeSingleReviewerFailures(data);
+
+    cout << "\n=== Risk Analysis ===\n";
+    if (!result.baselineFeasible) {
+        cout << "Base assignment is already not feasible.\n";
+        cout << "A single-reviewer failure analysis is only meaningful when the original assignment is feasible.\n";
+        return;
+    }
+
+    if (result.criticalReviewers.empty()) {
+        cout << "No single reviewer failure makes the assignment infeasible.\n";
+        return;
+    }
+
+    cout << "The following reviewers are critical:\n";
+    for (const auto& reviewer : result.criticalReviewers) {
+        cout << "  Reviewer " << reviewer.id << " - " << reviewer.name << "\n";
+    }
 }
