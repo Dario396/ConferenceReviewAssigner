@@ -82,12 +82,17 @@ void Menu::loadFile(){
     cout << "File: ";
     cin >> filename;
 
-  string filepath = filename;
-  if(filename.find('/') == string::npos && filename.find('\\') == string::npos) {
-    if (!filesystem::exists("inputs/" + filename)) {
-      filepath = "../inputs/" + filename;
+    string filepath = filename;
+    if (filename.find('/') == string::npos && filename.find('\\') == string::npos) {
+        const string inputPath = "inputs/" + filename;
+        const string parentInputPath = "../inputs/" + filename;
+
+        if (filesystem::exists(inputPath)) {
+            filepath = inputPath;
+        } else if (filesystem::exists(parentInputPath)) {
+            filepath = parentInputPath;
+        }
     }
-  }
 
     try {
         data = parser.parse(filepath);
