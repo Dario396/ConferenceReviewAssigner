@@ -44,5 +44,10 @@ RiskAnalysisResult RiskAnalysis::analyzeSingleReviewerFailures(const ConferenceD
         }
     }
 
+    std::sort(result.criticalReviewers.begin(), result.criticalReviewers.end(),
+          [](const CriticalReviewer& a, const CriticalReviewer& b) {
+              return a.id < b.id;
+          });
+
     return result;
 }
