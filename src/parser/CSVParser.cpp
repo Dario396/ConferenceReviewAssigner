@@ -8,8 +8,7 @@
 #include <unordered_set>
 #include "CSVParser.h"
 
-
-enum class Section {
+enum class InputBlock {
     None,
     Submissions,
     Reviewers,
@@ -17,32 +16,34 @@ enum class Section {
     Control
 };
 
-std::string trim(const std::string& str) {
-    size_t start = str.find_first_not_of(" \t\r\n");
-    if (start == std::string::npos) {
+std::string stripSpaces(const std::string& text) {
+    size_t first = text.find_first_not_of(" \t\r\n");
+    if (first == std::string::npos) {
         return "";
     }
-    size_t end = str.find_last_not_of(" \t\r\n");
-    return str.substr(start, end - start + 1);
+
+    size_t last = text.find_last_not_of(" \t\r\n");
+    return text.substr(first, last - first + 1);
 }
 
-std::vector<std::string> splitRespectingQuotes(const std::string& line) {
-    std::vector<std::string> fields;
-    std::string field;
-    bool insideQuotes = false;
+std::vector<std::string> splitCsvKeepingQuotes(const std::string& line) {
+    std::vector<std::string> tokens;
+    std::string currentToken;
+    bool quotedField = false;
 
-    for (char c : line) {
-        if (c == '"') {
-            insideQuotes = !insideQuotes;  // entra/sai das aspas
-        } else if (c == ',' && !insideQuotes) {
-            fields.push_back(trim(field)); // fim de campo
-            field.clear();
+    for (char ch : line) {
+        if (ch == '"') {
+            quotedField = !quotedField;
+        } else if (ch == ',' && !quotedField) {
+            tokens.push_back(stripSpaces(currentToken));
+            currentToken.clear();
         } else {
-            field += c;  // acumula o caracter
+            currentToken += ch;
         }
     }
-    fields.push_back(trim(field)); // último campo
-    return fields;
+
+    tokens.push_back(stripSpaces(currentToken));
+    return tokens;
 }
 
 ConferenceData CSVParser::parse(const std::string& filename) {
@@ -50,155 +51,152 @@ ConferenceData CSVParser::parse(const std::string& filename) {
     if (!file.is_open()) {
         throw std::runtime_error("Failed to open file " + filename);
     }
+
     ConferenceData data;
     std::string line;
-    Section currentSection = Section::None;
+    InputBlock activeBlock = InputBlock::None;
+
     while (std::getline(file, line)) {
         if (line == "#Submissions") {
-            currentSection = Section::Submissions;
+            activeBlock = InputBlock::Submissions;
             continue;
         }
 
         if (line == "#Reviewers") {
-            currentSection = Section::Reviewers;
+            activeBlock = InputBlock::Reviewers;
             continue;
         }
 
         if (line == "#Parameters") {
-            currentSection = Section::Parameters;
+            activeBlock = InputBlock::Parameters;
             continue;
         }
 
         if (line == "#Control") {
-            currentSection = Section::Control;
+            activeBlock = InputBlock::Control;
             continue;
         }
 
-        size_t commentPos = line.find('#');
-        if (commentPos != std::string::npos) {
-            line = line.substr(0, commentPos);
+        size_t commentStart = line.find('#');
+        if (commentStart != std::string::npos) {
+            line = line.substr(0, commentStart);
         }
 
-        line = trim(line);
+        line = stripSpaces(line);
 
-        if (line.empty()) continue;
+        if (line.empty()) {
+            continue;
+        }
 
-        if (currentSection == Section::Submissions) {
-            std::vector<std::string> fields = splitRespectingQuotes(line);
+        if (activeBlock == InputBlock::Submissions) {
+            std::vector<std::string> tokens = splitCsvKeepingQuotes(line);
 
-            if (fields.size() < 5 || fields.size() > 6) {
+            if (tokens.size() < 5 || tokens.size() > 6) {
                 throw std::runtime_error("Invalid submission line: " + line);
             }
 
             Submission submission;
-            submission.id = std::stoi(fields[0]);
-            submission.title = fields[1];
-            submission.authors = fields[2];
-            submission.email = fields[3];
-            submission.primary = std::stoi(fields[4]);
-            submission.secondary = fields[5].empty() ? -1 : std::stoi(fields[5]);
+            submission.id = std::stoi(tokens[0]);
+            submission.title = tokens[1];
+            submission.authors = tokens[2];
+            submission.email = tokens[3];
+            submission.primary = std::stoi(tokens[4]);
+            submission.secondary = tokens[5].empty() ? -1 : std::stoi(tokens[5]);
 
             data.submissions.push_back(submission);
             continue;
         }
 
-        if (currentSection == Section::Reviewers) {
-            std::vector<std::string> fields = splitRespectingQuotes(line);
+        if (activeBlock == InputBlock::Reviewers) {
+            std::vector<std::string> tokens = splitCsvKeepingQuotes(line);
 
-            if (fields.size() != 5) {
+            if (tokens.size() != 5) {
                 throw std::runtime_error("Invalid reviewer line: " + line);
             }
 
             Reviewer reviewer;
-            reviewer.id = std::stoi(fields[0]);
-            reviewer.name = fields[1];
-            reviewer.email = fields[2];
-            reviewer.primary = std::stoi(fields[3]);
-            reviewer.secondary = fields[4].empty() ? -1 : std::stoi(fields[4]);
+            reviewer.id = std::stoi(tokens[0]);
+            reviewer.name = tokens[1];
+            reviewer.email = tokens[2];
+            reviewer.primary = std::stoi(tokens[3]);
+            reviewer.secondary = tokens[4].empty() ? -1 : std::stoi(tokens[4]);
 
             data.reviewers.push_back(reviewer);
             continue;
         }
 
-        if (currentSection == Section::Parameters) {
-            std::vector<std::string> fields = splitRespectingQuotes(line);
+        if (activeBlock == InputBlock::Parameters) {
+            std::vector<std::string> tokens = splitCsvKeepingQuotes(line);
 
-            if (fields.size() != 2) {
+            if (tokens.size() != 2) {
                 throw std::runtime_error("Invalid parameter line: " + line);
             }
 
-            std::string parameterName = fields[0];
-            int value = std::stoi(fields[1]);
+            std::string entryKey = tokens[0];
+            int parsedValue = std::stoi(tokens[1]);
 
-            if (parameterName == "MinReviewsPerSubmission") {
-                data.parameters.minReviewsPerSubmission = value;
+            if (entryKey == "MinReviewsPerSubmission") {
+                data.parameters.minReviewsPerSubmission = parsedValue;
             }
-
-            else if (parameterName == "MaxReviewsPerReviewer") {
-                data.parameters.maxReviewsPerReviewer = value;
+            else if (entryKey == "MaxReviewsPerReviewer") {
+                data.parameters.maxReviewsPerReviewer = parsedValue;
             }
-
-            else if (parameterName == "PrimaryReviewerExpertise") {
-                data.parameters.primaryReviewerExpertise = value;
+            else if (entryKey == "PrimaryReviewerExpertise") {
+                data.parameters.primaryReviewerExpertise = parsedValue;
             }
-
-            else if (parameterName == "SecondaryReviewerExpertise") {
-                data.parameters.secondaryReviewerExpertise = value;
+            else if (entryKey == "SecondaryReviewerExpertise") {
+                data.parameters.secondaryReviewerExpertise = parsedValue;
             }
-
-            else if (parameterName == "PrimarySubmissionDomain") {
-                data.parameters.primarySubmissionDomain = value;
+            else if (entryKey == "PrimarySubmissionDomain") {
+                data.parameters.primarySubmissionDomain = parsedValue;
             }
-
-            else if (parameterName == "SecondarySubmissionDomain") {
-                data.parameters.secondarySubmissionDomain = value;
+            else if (entryKey == "SecondarySubmissionDomain") {
+                data.parameters.secondarySubmissionDomain = parsedValue;
             }
             else {
-                throw std::runtime_error("Unknown parameter: " + parameterName);
+                throw std::runtime_error("Unknown parameter: " + entryKey);
             }
+
             continue;
         }
 
-        if (currentSection == Section::Control) {
-            std::vector<std::string> fields = splitRespectingQuotes(line);
+        if (activeBlock == InputBlock::Control) {
+            std::vector<std::string> tokens = splitCsvKeepingQuotes(line);
 
-            if (fields.size() != 2) {
+            if (tokens.size() != 2) {
                 throw std::runtime_error("Invalid control line: " + line);
             }
 
-            std::string parameterName = fields[0];
+            std::string entryKey = tokens[0];
 
-            if (parameterName == "GenerateAssignments") {
-                int value = std::stoi(fields[1]);
-                data.control.generateAssignments = value;
+            if (entryKey == "GenerateAssignments") {
+                data.control.generateAssignments = std::stoi(tokens[1]);
             }
-
-            else if (parameterName == "RiskAnalysis") {
-                int value = std::stoi(fields[1]);
-                data.control.riskAnalysis = value;
+            else if (entryKey == "RiskAnalysis") {
+                data.control.riskAnalysis = std::stoi(tokens[1]);
             }
-
-            else if (parameterName == "OutputFileName") {
-                data.control.outputFilename = fields[1];
+            else if (entryKey == "OutputFileName") {
+                data.control.outputFilename = tokens[1];
             }
             else {
-                throw std::runtime_error("Unknown control parameter: " + parameterName);
+                throw std::runtime_error("Unknown control parameter: " + entryKey);
             }
+
             continue;
         }
     }
 
-    std::unordered_set<int> submissionIds;
-    for (const auto& s : data.submissions) {
-        if (!submissionIds.insert(s.id).second) {
-            throw std::runtime_error("Duplicate submission ID: " + std::to_string(s.id));
+    std::unordered_set<int> seenSubmissionIds;
+    for (const auto& submission : data.submissions) {
+        if (!seenSubmissionIds.insert(submission.id).second) {
+            throw std::runtime_error("Duplicate submission ID: " + std::to_string(submission.id));
         }
     }
 
-    std::unordered_set<int> reviewerIds;
-    for (const auto& r : data.reviewers) {
-        if (!reviewerIds.insert(r.id).second) {
-            throw std::runtime_error("Duplicate reviewer ID: " + std::to_string(r.id));
+    std::unordered_set<int> seenReviewerIds;
+    for (const auto& reviewer : data.reviewers) {
+        if (!seenReviewerIds.insert(reviewer.id).second) {
+            throw std::runtime_error("Duplicate reviewer ID: " + std::to_string(reviewer.id));
         }
     }
 

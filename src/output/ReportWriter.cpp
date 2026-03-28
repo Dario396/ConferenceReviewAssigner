@@ -36,12 +36,15 @@ void writeConferenceReport(const std::string& outputPath,
             output << "\n";
         }
 
-        output << "#RiskAnalysis\n";
-        output << "BaselineFeasible," << (riskAnalysis->baselineFeasible ? 1 : 0) << "\n";
-        output << "ReviewerId,ReviewerName\n";
+        output << "#Risk Analysis: 1\n";
 
-        for (const auto& reviewer : riskAnalysis->criticalReviewers) {
-            output << reviewer.id << "," << reviewer.name << "\n";
+        for (size_t i = 0; i < riskAnalysis->criticalReviewers.size(); ++i) {
+            if (i > 0) {
+                output << ", ";
+            }
+            output << riskAnalysis->criticalReviewers[i].id;
         }
+
+        output << "\n";
     }
 }
