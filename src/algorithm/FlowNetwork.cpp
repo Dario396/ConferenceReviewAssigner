@@ -18,6 +18,7 @@ void FlowNetwork::clear() {
     graph.removeVertex(vertex);
   }
 
+  edgeMatchDomains.clear();
   submissionIds.clear();
   submissionDomains.clear();
   reviewerIds.clear();
@@ -76,24 +77,53 @@ void FlowNetwork::build(const ConferenceData& data) {
   for(int i = 0; i < N; i++){
     for(int j = 0; j < M; j++){
       bool match = false;
+      int matchDomain = -1;
+
       const auto& sub = data.submissions[i];
       const auto& rev = data.reviewers[j];
       int mode = data.control.generateAssignments;
 
       if (mode == 1) {
-        match = (sub.primary == rev.primary);
+        if (sub.primary == rev.primary) {
+          match = true;
+          matchDomain = sub.primary;
+        }
       } else if (mode == 2) {
-        match = (sub.primary == rev.primary) ||
-                (sub.secondary != -1 && sub.secondary == rev.primary);
+        if (sub.primary == rev.primary) {
+          match = true;
+          matchDomain = sub.primary;
+        }
+
+        else if (sub.secondary != -1 && sub.secondary == rev.primary) {
+          match = true;
+          matchDomain = sub.secondary;
+        }
+
       } else if (mode == 3) {
-        match = (sub.primary == rev.primary) ||
-                (sub.secondary != -1 && sub.secondary == rev.primary) ||
-                (rev.secondary != -1 && sub.primary == rev.secondary) ||
-                (sub.secondary != -1 && rev.secondary != -1 && sub.secondary == rev.secondary);
+        if (sub.primary == rev.primary) {
+          match = true;
+          matchDomain = sub.primary;
+        }
+        else if (sub.secondary != -1 && sub.secondary == rev.primary) {
+          match = true;
+          matchDomain = sub.secondary;
+        }
+        else if (rev.secondary != -1 && rev.secondary == sub.primary) {
+          match = true;
+          matchDomain = sub.primary;
+        }
+        else if (sub.secondary != -1 && rev.secondary != -1 && rev.secondary == sub.secondary) {
+          match = true;
+          matchDomain = sub.secondary;
+        }
       }
 
       if (match) {
-        addResidualEdge(i + 1, N + j + 1, 1);
+        int submissionVertex = i + 1;
+        int reviewerVertex = N + j + 1;
+
+        addResidualEdge(submissionVertex, reviewerVertex, 1);
+        edgeMatchDomains[{submissionVertex, reviewerVertex}] = matchDomain;
       }
     }
   }
@@ -176,8 +206,8 @@ double FlowNetwork::solve() {
   return maxFlow;
 }
 
-vector<pair<int, int>> FlowNetwork::getAssignments() const {
-  vector<pair<int, int>> assignments;
+vector<ReviewAssignment> FlowNetwork::getAssignments() const {
+  vector<ReviewAssignment> assignments;
 
   for (int i = 0; i < numSubmissions; ++i) {
     auto submissionVertex = graph.findVertex(i + 1);
@@ -194,11 +224,22 @@ vector<pair<int, int>> FlowNetwork::getAssignments() const {
       }
 
       int reviewerIndex = destination - numSubmissions - 1;
-      assignments.emplace_back(submissionIds[i], reviewerIds[reviewerIndex]);
+      int submissionVertexId = i + 1;
+      int reviewerVertexId = destination;
+      int matchDomain = edgeMatchDomains.at({submissionVertexId, reviewerVertexId});
+
+      assignments.push_back({submissionIds[i], reviewerIds[reviewerIndex], matchDomain});
     }
   }
 
-  sort(assignments.begin(), assignments.end());
+  sort(assignments.begin(), assignments.end(),
+       [](const ReviewAssignment& a, const ReviewAssignment& b) {
+         if (a.submissionId != b.submissionId) {
+           return a.submissionId < b.submissionId;
+         }
+         return a.reviewerId < b.reviewerId;
+       });
+
   return assignments;
 }
 
