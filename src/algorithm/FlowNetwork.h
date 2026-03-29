@@ -9,6 +9,16 @@
 #include <tuple>
 #include <utility>
 #include <vector>
+#include <map>
+
+/**
+ * @brief Represents one review assignment between a submission and a reviewer.
+ */
+struct ReviewAssignment {
+    int submissionId;
+    int reviewerId;
+    int matchDomain;
+};
 
 class FlowNetwork {
 public:
@@ -27,10 +37,10 @@ public:
 
     /**
      * @brief Returns the reviewer assignments encoded by the current flow.
-     * @return Pairs of submission id and reviewer id.
+     * @return A list of assignments containing submission id, reviewer id and match domain.
      * @complexity O(N * M)
      */
-    std::vector<std::pair<int, int>> getAssignments() const;
+    std::vector<ReviewAssignment> getAssignments() const;
 
     /**
      * @brief Returns each submission still missing reviews.
@@ -48,6 +58,7 @@ private:
     std::vector<int> submissionIds;
     std::vector<int> submissionDomains;
     std::vector<int> reviewerIds;
+    std::map<std::pair<int, int>, int> edgeMatchDomains;
 
     void clear();
     void addResidualEdge(int from, int to, int capacity);

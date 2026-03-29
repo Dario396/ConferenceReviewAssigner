@@ -1,9 +1,10 @@
 #include "ReportWriter.h"
+#include <algorithm>
 #include <fstream>
 #include <stdexcept>
 
 void writeConferenceReport(const std::string& outputPath,
-                           const std::vector<std::pair<int, int>>& assignments,
+                           const std::vector<ReviewAssignment>& assignments,
                            const std::vector<std::tuple<int, int, int>>& missingReviews,
                            const RiskAnalysisResult* riskAnalysis) {
     std::ofstream output(outputPath);
@@ -12,11 +13,33 @@ void writeConferenceReport(const std::string& outputPath,
     }
 
     if (!assignments.empty()) {
-        output << "#Assignments\n";
-        output << "SubmissionId,ReviewerId\n";
+        output << "#SubmissionId,ReviewerId,Match\n";
         for (const auto& assignment : assignments) {
-            output << assignment.first << "," << assignment.second << "\n";
+            output << assignment.submissionId << ","
+                   << assignment.reviewerId << ","
+                   << assignment.matchDomain << "\n";
         }
+
+        output << "\n";
+
+        output << "#ReviewerId,SubmissionId,Match\n";
+        std::vector<ReviewAssignment> reviewerView = assignments;
+
+        std::sort(reviewerView.begin(), reviewerView.end(),
+                  [](const ReviewAssignment& a, const ReviewAssignment& b) {
+                      if (a.reviewerId != b.reviewerId) {
+                          return a.reviewerId < b.reviewerId;
+                      }
+                      return a.submissionId < b.submissionId;
+                  });
+
+        for (const auto& assignment : reviewerView) {
+            output << assignment.reviewerId << ","
+                   << assignment.submissionId << ","
+                   << assignment.matchDomain << "\n";
+        }
+
+        output << "#Total: " << assignments.size() << "\n";
     }
 
     if (!missingReviews.empty()) {
@@ -24,10 +47,11 @@ void writeConferenceReport(const std::string& outputPath,
             output << "\n";
         }
 
-        output << "#Submission\n";
-        output << "Id,Domain,MissingReviews\n";
+        output << "#SubmissionId,Domain,MissingReviews\n";
         for (const auto& [submissionId, domain, missing] : missingReviews) {
-            output << submissionId << "," << domain << "," << missing << "\n";
+            output << submissionId << ","
+                   << domain << ","
+                   << missing << "\n";
         }
     }
 

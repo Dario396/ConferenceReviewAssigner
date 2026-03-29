@@ -119,7 +119,7 @@ void Menu::showParameters(){
     cout << "Max reviews per reviewer:    " << data.parameters.maxReviewsPerReviewer << "\n";
     cout << "\n";
     cout << "Primary reviewer expertise:  " << data.parameters.primaryReviewerExpertise << "\n";
-    cout << "Secondary reviewer expertise:" << data.parameters.secondaryReviewerExpertise << "\n";
+    cout << "Secondary reviewer expertise: " << data.parameters.secondaryReviewerExpertise << "\n";
     cout << "\n";
     cout << "Primary submission domain:   " << data.parameters.primarySubmissionDomain << "\n";
     cout << "Secondary submission domain: " << data.parameters.secondarySubmissionDomain << "\n";
@@ -156,12 +156,13 @@ void Menu::generateAssignment(){
     if (!assignments.empty()) {
         cout << "\nAssignments:\n";
         for (const auto& assignment : assignments) {
-            cout << "  Submission " << assignment.first
-                 << " <- Reviewer " << assignment.second << "\n";
+            cout << "  Submission " << assignment.submissionId
+                 << " <- Reviewer " << assignment.reviewerId
+                 << " (match " << assignment.matchDomain << ")\n";
         }
     }
 
-    if (data.control.generateAssignments != 0) {
+    if (data.control.generateAssignments != 0 || data.control.riskAnalysis != 0) {
         try {
             RiskAnalysisResult riskAnalysis;
             RiskAnalysisResult* riskAnalysisPtr = nullptr;
