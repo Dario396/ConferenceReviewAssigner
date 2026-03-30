@@ -1,27 +1,32 @@
-.idea/
-cmake-build-*/
+# Build artifacts
 build/
-main
+build-*/
+cmake-build-*/
+*.exe
+*.obj
+*.o
+*.ilk
+*.pdb
 
-# Ficheiros do CMake que podem aparecer na raiz
+# CMake generated files
 CMakeCache.txt
 CMakeFiles/
 cmake_install.cmake
 Makefile
 
-# Editor/IDE
+# IDE / editor files
 .vscode/
 .idea/
 *.swp
 
-# OS
+# OS files
 .DS_Store
+Thumbs.db
 
-# Generated documentation
-docs/
-html/
-latex/
+# Temporary / local folders
+temp/
+data/
 
-# Local binaries and project files
-main.exe
-Project1Description_rc2.pdf
+# Doxygen generated folders outside the configured output directory
+/html/
+/latex/

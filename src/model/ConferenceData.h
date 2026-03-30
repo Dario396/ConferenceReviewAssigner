@@ -11,10 +11,17 @@
 #include "Parameters.h"
 #include "Control.h"
 
+/**
+ * @brief Aggregates all information parsed from one conference instance.
+ */
 struct ConferenceData{
+    /** @brief Set of submissions read from the input file. */
     std::vector<Submission> submissions;
+    /** @brief Set of reviewers read from the input file. */
     std::vector<Reviewer> reviewers;
+    /** @brief Assignment and scoring parameters for the instance. */
     Parameters parameters;
+    /** @brief Control flags such as matching mode and output file name. */
     Control control;
 };
 

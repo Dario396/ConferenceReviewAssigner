@@ -7,11 +7,19 @@
 
 #include <string>
 
+/**
+ * @brief Stores the information associated with a reviewer.
+ */
 struct Reviewer {
+    /** @brief Unique identifier of the reviewer. */
     int id;
+    /** @brief Reviewer name. */
     std::string name;
+    /** @brief Reviewer e-mail address. */
     std::string email;
+    /** @brief Primary domain of expertise. */
     int primary;
+    /** @brief Secondary domain of expertise, or -1 if absent. */
     int secondary;
 };
 
