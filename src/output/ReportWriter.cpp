@@ -15,8 +15,8 @@ void writeConferenceReport(const std::string& outputPath,
     if (!assignments.empty()) {
         output << "#SubmissionId,ReviewerId,Match\n";
         for (const auto& assignment : assignments) {
-            output << assignment.submissionId << ","
-                   << assignment.reviewerId << ","
+            output << assignment.submissionId << ", "
+                   << assignment.reviewerId << ", "
                    << assignment.matchDomain << "\n";
         }
 
@@ -34,8 +34,8 @@ void writeConferenceReport(const std::string& outputPath,
                   });
 
         for (const auto& assignment : reviewerView) {
-            output << assignment.reviewerId << ","
-                   << assignment.submissionId << ","
+            output << assignment.reviewerId << ", "
+                   << assignment.submissionId << ", "
                    << assignment.matchDomain << "\n";
         }
 
@@ -49,8 +49,8 @@ void writeConferenceReport(const std::string& outputPath,
 
         output << "#SubmissionId,Domain,MissingReviews\n";
         for (const auto& [submissionId, domain, missing] : missingReviews) {
-            output << submissionId << ","
-                   << domain << ","
+            output << submissionId << ", "
+                   << domain << ", "
                    << missing << "\n";
         }
     }
