@@ -27,3 +27,19 @@ This example shows that the approach correctly identifies the subsets whose remo
 #Risk Analysis: 2
 (1,2), (1,3), (2,3), (4,5), (4,6), (5,6)
 ```
+
+## General Formulation without Risk Analysis
+
+For the general case, the problem is no longer restricted to the primary domain of each submission and the primary expertise of each reviewer. Instead, both the **primary and secondary domains** of submissions and the **primary and secondary expertise** of reviewers must be considered. This makes the assignment problem more expressive, because some reviewer-submission pairs are stronger matches than others.
+
+A natural extension is to keep the same **Max-Flow** structure as the basis of the solution, but associate a quality value with each possible assignment edge between a submission and a reviewer. The source would still connect to each submission with capacity equal to the required number of reviews, and each reviewer would still connect to the sink with capacity equal to the maximum number of reviews they may perform. The difference lies in the edges between submissions and reviewers: instead of representing only whether a match is allowed, these edges would also encode how desirable that match is.
+
+To model this, the most suitable approach is to use a **Min-Cost Max-Flow** formulation. Each compatible reviewer-submission pair would receive capacity `1` and a cost derived from the matching quality. For example, a match between a submission's primary domain and a reviewer's primary expertise should receive a better score than a match involving a secondary field. Since Min-Cost Max-Flow minimizes cost, stronger matches can be represented by lower costs, while weaker matches receive higher costs. In this way, the algorithm not only finds a feasible assignment, but also prefers higher-quality allocations among all feasible solutions.
+
+The weights already present in the input, namely `PrimaryReviewerExpertise`, `SecondaryReviewerExpertise`, `PrimarySubmissionDomain`, and `SecondarySubmissionDomain`, can be used to define these costs. A possible interpretation is to combine the contribution of the reviewer side and the submission side into a single score for each edge, then convert that score into a cost for the optimization process.
+
+### Complexity
+
+This formulation is more expensive than the basic feasibility-only model. First, all submission-reviewer pairs must still be tested, which takes `O(NM)`, where `N` is the number of submissions and `M` is the number of reviewers. Then, instead of a standard Max-Flow algorithm, the problem is solved with **Min-Cost Max-Flow**, whose complexity is higher because each augmentation must take edge costs into account. Using a shortest-path based implementation, the total complexity is polynomial, but significantly larger than the basic formulation.
+
+Therefore, the general version is computationally harder, since the goal is no longer just to determine whether a feasible assignment exists, but also to optimize the quality of the final allocation according to the primary and secondary domain/expertise preferences.
