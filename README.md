@@ -1,53 +1,99 @@
-# DA_projeto1
+# Conference Review Assigner
 
-Conference review assignment tool based on graph modeling and max-flow.
+A C++ application for automated assignment of conference paper reviews using graph algorithms and maximum flow optimization. This tool models the review assignment problem as a flow network to ensure fair and feasible reviewer-paper matching, with support for risk analysis to identify critical reviewer failures.
 
 ## Features
 
-- Interactive command-line menu
-- Batch execution mode
-- Parsing of project datasets
-- Review assignment generation
-- Detection of missing reviews in infeasible instances
-- Risk analysis for `RiskAnalysis = 1`
-- Doxygen documentation
+- **Interactive Command-Line Interface**: User-friendly menu for configuration and execution
+- **Batch Processing Mode**: Process multiple datasets automatically
+- **Multiple Matching Modes**: Support for primary and secondary domain matching
+- **Risk Analysis**: Identify critical reviewer subsets that could make assignments infeasible
+- **CSV Input/Output**: Parse conference datasets and generate assignment reports
+- **Doxygen Documentation**: Comprehensive code documentation
 
-## Build
+## Prerequisites
 
-From the project folder:
+- C++17 compatible compiler (e.g., GCC, Clang, MSVC)
+- CMake 3.26 or higher
+- Windows/Linux/macOS
 
-```powershell
-& "C:\msys64\ucrt64\bin\g++.exe" -std=c++17 -I src src/main.cpp src/parser/CSVParser.cpp src/ui/Menu.cpp src/algorithm/FlowNetwork.cpp src/algorithm/RiskAnalysis.cpp src/output/ReportWriter.cpp -o build\DA_projeto1.exe
+## Build Instructions
+
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/yourusername/ConferenceReviewAssigner.git
+   cd ConferenceReviewAssigner
+   ```
+
+2. Create build directory and compile:
+   ```bash
+   mkdir build
+   cd build
+   cmake ..
+   make
+   ```
+
+   Or on Windows with MinGW:
+   ```powershell
+   mkdir build
+   cd build
+   cmake -G "MinGW Makefiles" ..
+   mingw32-make
+   ```
+
+## Usage
+
+### Interactive Mode
+Run the application without arguments for the interactive menu:
+```bash
+./ConferenceReviewAssigner
 ```
 
-## Run
-
-Interactive mode:
-
-```powershell
-.\build\DA_projeto1.exe
+### Batch Mode
+Process a dataset directly:
+```bash
+./ConferenceReviewAssigner -b inputs/dataset1.csv output.csv
 ```
 
-Batch mode:
+## Input Format
 
-```powershell
-.\build\DA_projeto1.exe -b inputs\dataset1.csv output.csv
-```
+Input files are CSV-formatted with the following sections:
 
-## Input Structure
+- **#Submissions**: Paper submissions with ID, primary domain, secondary domain
+- **#Reviewers**: Reviewers with ID, primary expertise, secondary expertise, max reviews
+- **#Parameters**: Configuration like GenerateAssignments mode, RiskAnalysis level
+- **#Control**: Additional control parameters
 
-The input files are divided into the following sections:
+### Matching Modes
+- `GenerateAssignments = 1`: Primary submission domain vs primary reviewer expertise
+- `GenerateAssignments = 2`: Include secondary submission domain
+- `GenerateAssignments = 3`: Include secondary fields on both sides
 
-- `#Submissions`
-- `#Reviewers`
-- `#Parameters`
-- `#Control`
+## Output
 
-## Matching Modes
+The tool generates CSV reports with review assignments and, when enabled, risk analysis results showing critical reviewer combinations.
 
-- `GenerateAssignments = 1`: primary submission domain vs primary reviewer expertise
-- `GenerateAssignments = 2`: broader compatibility including submission secondary domain
-- `GenerateAssignments = 3`: broader compatibility including secondary fields on both sides
+## Algorithm Overview
+
+The core algorithm uses:
+- **Maximum Flow (Edmonds-Karp)**: For feasibility checking and basic assignments
+- **Min-Cost Max-Flow**: For optimal assignments considering match quality
+- **Combinatorial Risk Analysis**: Enumerates reviewer subsets to identify failure points
+
+## Contributing
+
+Contributions are welcome! Please:
+1. Fork the repository
+2. Create a feature branch
+3. Submit a pull request with detailed description
+
+## License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
+
+## Acknowledgments
+
+This project was developed as part of a Data Structures and Algorithms course assignment.
 
 ## Risk Analysis
 

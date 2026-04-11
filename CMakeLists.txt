@@ -1,8 +1,8 @@
 cmake_minimum_required(VERSION 3.26)
 
-project(DA_projeto1 LANGUAGES CXX)
+project(ConferenceReviewAssigner LANGUAGES CXX)
 
-add_executable(DA_projeto1
+add_executable(ConferenceReviewAssigner
     src/main.cpp
     src/parser/CSVParser.cpp
     src/ui/Menu.cpp
@@ -11,8 +11,8 @@ add_executable(DA_projeto1
     src/output/ReportWriter.cpp
 )
 
-target_compile_features(DA_projeto1 PRIVATE cxx_std_17)
+target_compile_features(ConferenceReviewAssigner PRIVATE cxx_std_17)
 
-target_include_directories(DA_projeto1 PRIVATE
+target_include_directories(ConferenceReviewAssigner PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/src
 )
