@@ -3,15 +3,29 @@
 #include <fstream>
 #include <tuple>
 #include <vector>
+#include <filesystem>
 #include "algorithm/FlowNetwork.h"
 #include "algorithm/RiskAnalysis.h"
 #include "output/ReportWriter.h"
 #include "parser/CSVParser.h"
 #include "ui/Menu.h"
+
 using namespace std;
 
 int runBatchMode(const string& inputPath, const string& outputPath) {
-    ConferenceData data = CSVParser::parse(inputPath);
+    string filepath = inputPath;
+    if (inputPath.find('/') == string::npos && inputPath.find('\\') == string::npos) {
+        const string localInputPath = "inputs/" + inputPath;
+        const string parentInputPath = "../inputs/" + inputPath;
+
+        if (filesystem::exists(localInputPath)) {
+            filepath = localInputPath;
+        } else if (filesystem::exists(parentInputPath)) {
+            filepath = parentInputPath;
+        }
+    }
+
+    ConferenceData data = CSVParser::parse(filepath);
     data.control.outputFilename = outputPath;
 
     FlowNetwork network;
@@ -35,8 +49,8 @@ int main(int argc, char* argv[]) {
      * ./myProg -b input.csv output.csv
      * skips the menu
      * read from input.csv
-     * writes to output.csv (ssignments + risk management)
-     * send error messages to stderr (std:cerr)
+     * writes to output.csv (assignments + risk management)
+     * send error messages to stderr (std::cerr)
      */
     if (argc == 4 && strcmp(argv[1], "-b") == 0) {
         try {
