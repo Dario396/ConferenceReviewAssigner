@@ -52,7 +52,7 @@ Run the application without arguments for the interactive menu:
 ### Batch Mode
 Process a dataset directly:
 ```bash
-./ConferenceReviewAssigner -b ../inputs/dataset1.csv output.csv
+./ConferenceReviewAssigner -b dataset1.csv output.csv
 ```
 
 ## Input Format
